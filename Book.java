@@ -1,4 +1,4 @@
-public class Book {
+public class Book implements Comparable<Book> {
     private String title;
     private String author;
     private int year;
@@ -19,6 +19,11 @@ public class Book {
 
     public int getYear() {
         return year;
+    }
+
+    @Override
+    public int compareTo(Book other) {
+        return this.title.compareToIgnoreCase(other.title);
     }
 
     @Override
