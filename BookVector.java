@@ -1,4 +1,6 @@
-public class BookVector {
+import java.util.Comparator;
+
+public class BookVector implements Comparable<BookVector> {
     private Book[] data;
     private int size;
 
@@ -141,5 +143,46 @@ public class BookVector {
         for (int i = 0; i < size; i++) {
             System.out.println(i + ": " + data[i]);
         }
+    }
+
+    // Сортування за замовчуванням через Comparable<Book>
+    public void sort() {
+        if (size < 2) {
+            return;
+        }
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - 1 - i; j++) {
+                if (data[j].compareTo(data[j + 1]) > 0) {
+                    Book temp = data[j];
+                    data[j] = data[j + 1];
+                    data[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // Сортування через Comparator<Book>
+    public void sort(Comparator<Book> comparator) {
+        if (size < 2) {
+            return;
+        }
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - 1 - i; j++) {
+                if (comparator.compare(data[j], data[j + 1]) > 0) {
+                    Book temp = data[j];
+                    data[j] = data[j + 1];
+                    data[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // Порівняння колекцій між собою
+    // Будемо порівнювати за кількістю елементів
+    @Override
+    public int compareTo(BookVector other) {
+        return Integer.compare(this.size, other.size);
     }
 }
