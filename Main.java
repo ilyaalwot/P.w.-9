@@ -1,74 +1,58 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Практична робота №8. Користувацькі виключення ===");
-
-        // 1. Перевірка некоректної місткості
         try {
-            BookVector badVector = new BookVector(0);
-        } catch (InvalidCapacityException e) {
-            System.out.println("Помилка створення Vector: " + e.getMessage());
-        }
+            BookVector vector = new BookVector(5);
 
-        try {
-            BookVector vector = new BookVector(2);
-
-            Book b1 = new Book("1984", "George Orwell", 1949);
-            Book b2 = new Book("Dune", "Frank Herbert", 1965);
+            Book b1 = new Book("Dune", "Frank Herbert", 1965);
+            Book b2 = new Book("1984", "George Orwell", 1949);
             Book b3 = new Book("The Hobbit", "J.R.R. Tolkien", 1937);
+            Book b4 = new Book("Fahrenheit 451", "Ray Bradbury", 1953);
 
-            System.out.println("\n=== Додавання книг ===");
             vector.add(b1);
             vector.add(b2);
-            vector.addFirst(b3);
+            vector.add(b3);
+            vector.add(b4);
+
+            System.out.println("=== Початковий Vector ===");
             vector.printAll();
 
-            System.out.println("\n=== Спроба додати null ===");
-            try {
-                vector.add(null);
-            } catch (NullBookException e) {
-                System.out.println("Помилка: " + e.getMessage());
-            }
+            // Comparable для Book
+            System.out.println("\n=== Порівняння двох книг через Comparable ===");
+            System.out.println("b1.compareTo(b2) = " + b1.compareTo(b2));
 
-            System.out.println("\n=== Спроба звернення за неправильним індексом ===");
-            try {
-                System.out.println(vector.get(10));
-            } catch (InvalidIndexException e) {
-                System.out.println("Помилка: " + e.getMessage());
-            }
-
-            System.out.println("\n=== Видалення елемента за індексом 1 ===");
-            try {
-                Book removed = vector.remove(1);
-                System.out.println("Видалено: " + removed);
-            } catch (EmptyVectorException | InvalidIndexException e) {
-                System.out.println("Помилка: " + e.getMessage());
-            }
-
-            System.out.println("\n=== Поточний стан Vector ===");
-            vector.printAll();
-            System.out.println("Size: " + vector.size());
-            System.out.println("Capacity: " + vector.capacity());
-
-            System.out.println("\n=== Очищення Vector ===");
-            vector.clear();
+            // sort() без аргументів - по title
+            System.out.println("\n=== Сортування за замовчуванням (Comparable, по title) ===");
+            vector.sort();
             vector.printAll();
 
-            System.out.println("\n=== Спроба видалити з порожнього Vector ===");
-            try {
-                vector.remove(0);
-            } catch (EmptyVectorException e) {
-                System.out.println("Помилка: " + e.getMessage());
-            }
+            // sort(Comparator) - по year
+            System.out.println("\n=== Сортування через Comparator (по year) ===");
+            vector.sort(new BookYearComparator());
+            vector.printAll();
 
-            System.out.println("\n=== Спроба отримати елемент з порожнього Vector ===");
-            try {
-                vector.get(0);
-            } catch (EmptyVectorException e) {
-                System.out.println("Помилка: " + e.getMessage());
+            // sort(Comparator) - по author
+            System.out.println("\n=== Сортування через Comparator (по author) ===");
+            vector.sort(new BookAuthorComparator());
+            vector.printAll();
+
+            // Порівняння двох колекцій
+            BookVector vector2 = new BookVector(5);
+            vector2.add(new Book("Java Core", "Some Author", 2020));
+            vector2.add(new Book("Clean Code", "Robert Martin", 2008));
+
+            System.out.println("\n=== Порівняння двох колекцій ===");
+            int result = vector.compareTo(vector2);
+
+            if (result > 0) {
+                System.out.println("Перший Vector більший за другий");
+            } else if (result < 0) {
+                System.out.println("Перший Vector менший за другий");
+            } else {
+                System.out.println("Vectors рівні за кількістю елементів");
             }
 
         } catch (InvalidCapacityException e) {
-            System.out.println("Критична помилка створення Vector: " + e.getMessage());
+            System.out.println("Помилка створення Vector: " + e.getMessage());
         }
     }
 }
